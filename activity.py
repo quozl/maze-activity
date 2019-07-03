@@ -140,7 +140,10 @@ class MazeActivity(activity.Activity):
         return toolbar_box
 
     def _add_hole(self, button):
-        self.game.add_hole(button.get_active())
+        if button.get_active():
+            self.game.hole = True
+        else:
+            self.game.hole = False
         self.broadcast_msg('maze_hole:%s' % str(button.get_active()))
 
     def _easier_button_cb(self, button):

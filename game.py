@@ -176,12 +176,6 @@ class MazeGame(Gtk.DrawingArea):
         self._activity.unbusy()
         self.reset()
 
-    def add_hole(self, hole):
-        if(hole is True):
-            self.hole = True
-        else:
-            self.hole = False
-
     def game_running_time(self, newelapsed=None):
         return time.time() - self.game_start_time
 
