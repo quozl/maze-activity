@@ -107,7 +107,7 @@ class MazeActivity(activity.Activity):
         harder_button.connect('clicked', self._harder_button_cb)
         toolbar_box.toolbar.insert(harder_button, -1)
 
-        self.hole_button = ToggleToolButton('blackhole')
+        self.hole_button = ToggleToolButton('maze-hole')
         self.hole_button.set_tooltip(_('Add holes'))
         self.hole_button.set_active(False)
         self.hole_button.connect('toggled', self._add_hole)
@@ -141,7 +141,7 @@ class MazeActivity(activity.Activity):
 
     def _add_hole(self, button):
         self.game.add_hole(button.get_active())
-        self.broadcast_msg('blackhole:%s' % str(button.get_active()))
+        self.broadcast_msg('maze_hole:%s' % str(button.get_active()))
 
     def _easier_button_cb(self, button):
         self.game.easier()

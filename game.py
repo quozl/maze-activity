@@ -595,7 +595,7 @@ class MazeGame(Gtk.DrawingArea):
 
             show_trail: True/False
 
-            blackhole: True/False
+            maze_hole: True/False
                 To enable holes in mazes
 
             finish: elapsed
@@ -658,9 +658,9 @@ class MazeGame(Gtk.DrawingArea):
             show_trail = message.endswith('True')
             self._activity.show_trail_button.set_active(show_trail)
 
-        elif message.startswith("blackhole:"):
-            blackhole = message.endswith('True')
-            self._activity.hole_button.set_active(blackhole)
+        elif message.startswith("maze_hole:"):
+            maze_hole = message.endswith('True')
+            self._activity.hole_button.set_active(maze_hole)
 
         else:
             # it was something I don't recognize...
