@@ -240,7 +240,9 @@ class MazeActivity(activity.Activity):
         data = {'seed': self.game.maze.seed,
                 'width': self.game.maze.width,
                 'height': self.game.maze.height,
-                'finish_time': self.game.finish_time}
+                'finish_time': self.game.finish_time,
+                'hole': self.game.hole}
+
         logging.debug('Saving data: %s', data)
         self.metadata['state'] = json.dumps(data)
 

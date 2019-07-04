@@ -45,7 +45,7 @@ class Maze:
     GOAL = 3
     HOLE = 4
 
-    def __init__(self, seed, width, height, hole=False):
+    def __init__(self, seed, width, height, add_hole=False):
         # use the seed given to us to make a pseudo-random number generator
         # we will use that to generate the maze, so that other players can
         # generate the exact same maze given the same seed.
@@ -62,7 +62,7 @@ class Maze:
         startx = self.generator.randrange(1, width, 2)
         starty = self.generator.randrange(1, height, 2)
         self.dig(startx, starty)
-        if(hole is True):
+        if add_hole:
             self._generate_holes()
 
         for row in self.map:
