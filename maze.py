@@ -49,8 +49,8 @@ class Maze:
         # use the seed given to us to make a pseudo-random number generator
         # we will use that to generate the maze, so that other players can
         # generate the exact same maze given the same seed.
-        logging.debug("Generating maze: seed %d, width %d, height %d", seed,
-                      width, height)
+        logging.debug("Generating maze: seed %d, width %d, height %d, add_hole %r", seed,
+                      width, height, add_hole)
         self.seed = seed
         self.generator = random.Random(seed)
         self.width, self.height = width, height

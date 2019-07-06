@@ -519,10 +519,11 @@ class MazeGame(Gtk.DrawingArea):
              player.direction[0], player.direction[1]))
 
     def _send_maze(self):
+        hole = 1 if self.hole else 0
         self._activity.broadcast_msg(
-            "maze:%d,%d,%d,%d" %
+            "maze:%d,%d,%d,%d,%d" %
             (self.game_running_time() * 1e6, self.maze.seed, self.maze.width,
-             self.maze.height))
+             self.maze.height, hole))
 
     def _handle_req_maze(self, player):
         # tell them which maze we are playing, so they can sync up
@@ -576,7 +577,7 @@ class MazeGame(Gtk.DrawingArea):
             req_maze
                 Request to please send me the maze.  Reply is maze:.
 
-            maze: running_time, seed, width, height
+            maze: running_time, seed, width, height, hole
                 A player has a different maze.
                 The one that has been running the longest will force all other
                 players to use that maze.
@@ -624,8 +625,9 @@ class MazeGame(Gtk.DrawingArea):
         elif message.startswith("maze:"):
             # someone has a different maze than us
             self._activity.update_alert('Connected', 'Maze shared!')
-            running_time, seed, width, height = map(lambda x: int(x),
-                                                    message[5:].split(",")[:4])
+            running_time, seed, width, height, hole = map(lambda x: int(x),
+                                                    message[5:].split(",")[:5])
+            self.hole = True if hole else False
             if self.maze.seed == seed:
                 logging.debug('Same seed, don\'t reload Maze')
                 return
