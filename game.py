@@ -273,14 +273,15 @@ class MazeGame(Gtk.DrawingArea):
                 self._ctx.fill()
 
             if self._show_trail:
-                if tile == self.maze.SEEN:
-                    radius = self.tileSize / 3 - self.outline
-                    center = self.tileSize / 2
-                    self._ctx.set_source_rgba(
-                        *self.localplayers[0].bg.get_rgba())
-                    self._ctx.arc(rect.x + center, rect.y + center, radius, 0,
-                                  2 * pi)
-                    self._ctx.fill()
+                for gameplayer in self.allplayers:
+                    if tile == self.maze.SEEN:
+                        radius = self.tileSize / 3 - self.outline
+                        center = self.tileSize / 2
+                        self._ctx.set_source_rgba(
+                            *gameplayer.bg.get_rgba())
+                        self._ctx.arc(rect.x + center, rect.y + center, radius, 0,
+                                      2 * pi)
+                        self._ctx.fill()
             self._ctx.restore()
 
         # re-draw the dirty rectangle
@@ -626,7 +627,7 @@ class MazeGame(Gtk.DrawingArea):
             # someone has a different maze than us
             self._activity.update_alert('Connected', 'Maze shared!')
             running_time, seed, width, height, hole = map(lambda x: int(x),
-                                                    message[5:].split(",")[:5])
+                                                    message[5:].split(","))
             self.hole = True if hole else False
             if self.maze.seed == seed:
                 logging.debug('Same seed, don\'t reload Maze')
@@ -654,6 +655,7 @@ class MazeGame(Gtk.DrawingArea):
         elif message.startswith("show_trail:"):
             show_trail = message.endswith('True')
             self._activity.show_trail_button.set_active(show_trail)
+            self._activity.game.set_show_trail(show_trail)
 
         elif message.startswith("maze_hole:"):
             maze_hole = message.endswith('True')
