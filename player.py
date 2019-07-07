@@ -50,14 +50,12 @@ class Player:
         self.bonusplayers = None
         self.reset()
         self.falling = 0.0
-        self.fall_state = False
 
     def draw(self, ctx, bounds, size, hole_color):
         if self.falling > 0.0:
-            self.falling -= 0.2
-            if self.falling <= 0.0:
+            self.falling -= 10
+            if self.falling <= 20:
                 self.falling = 0.0
-                self.fall_state = False
                 self.reset()
         line_width = size / 32.
         rect = Rectangle(bounds.x + self.position[0] * size,
@@ -80,16 +78,13 @@ class Player:
             'left': [1., 1., 1., 1.],
             'right': [0., 0., 0., 1.]
         }
-        if self.falling > 0.2:
+        if self.falling > 20:
             fg = {
                 'centre': hole_color,
                 'left': [0.45, 0.45, 0.45, 1.],
                 'right': [0.55, 0.55, 0.55, 1.]
             }
-            size *= float(3 / 2 - self.falling)
-
-        if(self.falling < 1.0 and self.fall_state):
-            size = 10
+            size = self.falling
 
         # a background filled circle with foreground border
         ctx.arc(cx, cy, (size / 2 - line_width), 0, 2 * math.pi)
@@ -166,9 +161,8 @@ class Player:
         self.previous = self.position
         self.position = newposition
 
-    def fallThroughHole(self):
-        self.fall_state = True
-        self.falling = 2.0
+    def fallThroughHole(self, tile_size):
+        self.falling = tile_size
 
     def canGo(self, direction, maze):
         """Can the player go in this direction without bumping into

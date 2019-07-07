@@ -277,8 +277,7 @@ class MazeGame(Gtk.DrawingArea):
                     if tile == self.maze.SEEN:
                         radius = self.tileSize / 3 - self.outline
                         center = self.tileSize / 2
-                        self._ctx.set_source_rgba(
-                            *gameplayer.bg.get_rgba())
+                        self._ctx.set_source_rgba(*gameplayer.bg.get_rgba())
                         self._ctx.arc(rect.x + center, rect.y + center, radius, 0,
                                       2 * pi)
                         self._ctx.fill()
@@ -489,7 +488,8 @@ class MazeGame(Gtk.DrawingArea):
                     self.finish(player)
                 elif self.maze.map[newposition[0]][newposition[1]] == \
                         self.maze.HOLE:
-                    player.fallThroughHole()
+                    player.fallThroughHole(self.tileSize)
+                    self._activity.broadcast_msg('fall_hole')
             self.queue_draw()
             if change_direction:
                 GLib.timeout_add(100, self.player_walk, player)
@@ -595,6 +595,9 @@ class MazeGame(Gtk.DrawingArea):
             maze_hole: True/False
                 To enable holes in mazes
 
+            fall_hole
+                To communicate whether a player has fallen in the hole to all buddies
+
             finish: elapsed
                 A player has finished the maze
         """
@@ -660,7 +663,11 @@ class MazeGame(Gtk.DrawingArea):
         elif message.startswith("maze_hole:"):
             maze_hole = message.endswith('True')
             self._activity.hole_button.set_active(maze_hole)
+            self.hole = maze_hole
 
+        elif message.startswith("fall_hole"):
+            player.fallThroughHole(self.tileSize)
+            self.queue_draw()
         else:
             # it was something I don't recognize...
             logging.debug("Message from %s: %s", player.nick, message)
