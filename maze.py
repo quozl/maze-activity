@@ -44,6 +44,7 @@ class Maze:
     SEEN = 2
     GOAL = 3
     HOLE = 4
+    PASSED = 5
 
     def __init__(self, seed, width, height, add_hole=False):
         # use the seed given to us to make a pseudo-random number generator

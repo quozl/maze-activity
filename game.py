@@ -54,6 +54,7 @@ class MazeGame(Gtk.DrawingArea):
     SOLID_COLOR = (28.0 / 255.0, 28.0 / 255.0, 28.0 / 255.0)
     GOAL_COLOR = (0x00, 0xff, 0x00)
     HOLE_COLOR = (255, 0, 0)
+    PASSED_COLOR = (0, 255, 0)
 
     def __init__(self, activity, owner, state=None):
         super(MazeGame, self).__init__()
@@ -258,7 +259,6 @@ class MazeGame(Gtk.DrawingArea):
                 self._ctx.fill_preserve()
                 self._ctx.set_source_rgba(*self.SOLID_COLOR)
                 self._ctx.stroke()
-
             else:
                 background_color = self.EMPTY_COLOR
                 if tile == self.maze.EMPTY:
@@ -267,6 +267,8 @@ class MazeGame(Gtk.DrawingArea):
                     background_color = self.SOLID_COLOR
                 elif tile == self.maze.GOAL:
                     background_color = self.GOAL_COLOR
+                elif tile == self.maze.PASSED:
+                    background_color = self.PASSED_COLOR
                 self._ctx.save()
                 self._ctx.set_source_rgb(*background_color)
                 self._ctx.rectangle(*rect.get_bounds())
@@ -481,8 +483,11 @@ class MazeGame(Gtk.DrawingArea):
             self._mark_point_dirty(oldposition)
             self._mark_point_dirty(newposition)
             if oldposition != newposition and player in self.localplayers:
-                self.maze.map[player.previous[0]][player.previous[1]] = \
-                    self.maze.SEEN
+                if self.maze.map[player.previous[0]][player.previous[1]] == self.maze.PASSED:
+                    pass
+                else:
+                    self.maze.map[player.previous[0]][player.previous[1]] = \
+                        self.maze.SEEN
                 if self.maze.map[newposition[0]][newposition[1]] == \
                         self.maze.GOAL:
                     self.finish(player)
@@ -490,7 +495,7 @@ class MazeGame(Gtk.DrawingArea):
                         self.maze.HOLE:
                     player.fallThroughHole(self.tileSize)
                     self._activity.broadcast_msg('fall_hole:%s,%s' %(str(newposition[0]), str(newposition[1])))
-                    self.maze.map[newposition[0]][newposition[1]] = self.maze.EMPTY
+                    self.maze.map[newposition[0]][newposition[1]] = self.maze.PASSED
             self.queue_draw()
             if change_direction:
                 GLib.timeout_add(100, self.player_walk, player)
@@ -669,9 +674,8 @@ class MazeGame(Gtk.DrawingArea):
 
         elif message.startswith("fall_hole:"):
             player.fallThroughHole(self.tileSize)
-            main_player = self.localplayers[0]
             x_cor, y_cor = map(lambda x: int(x), message[10:].split(","))
-            self.maze.map[x_cor][y_cor] = self.maze.EMPTY
+            self.maze.map[x_cor][y_cor] = self.maze.PASSED
             self.queue_draw()
         else:
             # it was something I don't recognize...
