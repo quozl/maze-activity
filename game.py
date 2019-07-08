@@ -274,7 +274,7 @@ class MazeGame(Gtk.DrawingArea):
 
             if self._show_trail:
                 for gameplayer in self.allplayers:
-                    if tile == self.maze.SEEN:
+                    if tile == self.maze.SEEN and not gameplayer.hidden:
                         radius = self.tileSize / 3 - self.outline
                         center = self.tileSize / 2
                         self._ctx.set_source_rgba(*gameplayer.bg.get_rgba())
@@ -489,7 +489,8 @@ class MazeGame(Gtk.DrawingArea):
                 elif self.maze.map[newposition[0]][newposition[1]] == \
                         self.maze.HOLE:
                     player.fallThroughHole(self.tileSize)
-                    self._activity.broadcast_msg('fall_hole')
+                    self._activity.broadcast_msg('fall_hole:%s,%s' %(str(newposition[0]), str(newposition[1])))
+                    self.maze.map[newposition[0]][newposition[1]] = self.maze.EMPTY
             self.queue_draw()
             if change_direction:
                 GLib.timeout_add(100, self.player_walk, player)
@@ -595,8 +596,9 @@ class MazeGame(Gtk.DrawingArea):
             maze_hole: True/False
                 To enable holes in mazes
 
-            fall_hole
-                To communicate whether a player has fallen in the hole to all buddies
+            fall_hole: x, y
+                To communicate whether a player has fallen in the
+                hole to all buddies as well as position of the hole
 
             finish: elapsed
                 A player has finished the maze
@@ -665,8 +667,11 @@ class MazeGame(Gtk.DrawingArea):
             self._activity.hole_button.set_active(maze_hole)
             self.hole = maze_hole
 
-        elif message.startswith("fall_hole"):
+        elif message.startswith("fall_hole:"):
             player.fallThroughHole(self.tileSize)
+            main_player = self.localplayers[0]
+            x_cor, y_cor = map(lambda x: int(x), message[10:].split(","))
+            self.maze.map[x_cor][y_cor] = self.maze.EMPTY
             self.queue_draw()
         else:
             # it was something I don't recognize...
