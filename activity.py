@@ -34,15 +34,17 @@ class MazeActivity(activity.Activity):
         activity.Activity.__init__(self, handle)
         self._busy_count = 0
         self._unbusy_idle_sid = None
+        state = None
+        add_hole = False
+        if 'state' in self.metadata:
+            state = json.loads(self.metadata['state'])
+            add_hole = state['hole']
 
-        self.build_toolbar()
+        self.build_toolbar(add_hole)
 
         self.pservice = PresenceService()
         self.owner = self.pservice.get_owner()
 
-        state = None
-        if 'state' in self.metadata:
-            state = json.loads(self.metadata['state'])
         self.game = game.MazeGame(self, self.owner, state)
         self.set_canvas(self.game)
         self.game.show()
@@ -85,7 +87,7 @@ class MazeActivity(activity.Activity):
         self.get_window().set_cursor(cursor)
         Gdk.flush()
 
-    def build_toolbar(self):
+    def build_toolbar(self, add_hole):
         """Build our Activity toolbar for the Sugar system."""
 
         toolbar_box = ToolbarBox()
@@ -109,7 +111,7 @@ class MazeActivity(activity.Activity):
 
         self.hole_button = ToggleToolButton('maze-hole')
         self.hole_button.set_tooltip(_('Add holes'))
-        self.hole_button.set_active(False)
+        self.hole_button.set_active(add_hole)
         self.hole_button.connect('toggled', self._add_hole)
         toolbar_box.toolbar.insert(self.hole_button, -1)
 
