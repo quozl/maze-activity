@@ -140,7 +140,7 @@ class Player:
         update = False
         if maze.map[self.position[0]][self.position[1]] == maze.GOAL:
             self.direction = (0, 0)
-        elif maze.map[self.position[0]][self.position[1]] == maze.HOLE or self.falling > 0:
+        elif maze.map[self.position[0]][self.position[1]] == maze.HOLE or (maze.map[self.position[0]][self.position[1]] == maze.PASSED and self.falling > 0.0):
             update = True
             self.direction = (0, 0)
         if self.direction == (0, 0):
