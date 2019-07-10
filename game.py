@@ -275,14 +275,13 @@ class MazeGame(Gtk.DrawingArea):
                 self._ctx.fill()
 
             if self._show_trail:
-                for gameplayer in self.allplayers:
-                    if tile == self.maze.SEEN and not gameplayer.hidden:
-                        radius = self.tileSize / 3 - self.outline
-                        center = self.tileSize / 2
-                        self._ctx.set_source_rgba(*gameplayer.bg.get_rgba())
-                        self._ctx.arc(rect.x + center, rect.y + center, radius, 0,
-                                      2 * pi)
-                        self._ctx.fill()
+                if tile == self.maze.SEEN:
+                    radius = self.tileSize / 3 - self.outline
+                    center = self.tileSize / 2
+                    self._ctx.set_source_rgba(*self.localplayers[0].bg.get_rgba())
+                    self._ctx.arc(rect.x + center, rect.y + center, radius, 0,
+                                    2 * pi)
+                    self._ctx.fill()
             self._ctx.restore()
 
         # re-draw the dirty rectangle
