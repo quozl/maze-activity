@@ -278,9 +278,10 @@ class MazeGame(Gtk.DrawingArea):
                 if tile == self.maze.SEEN:
                     radius = self.tileSize / 3 - self.outline
                     center = self.tileSize / 2
-                    self._ctx.set_source_rgba(*self.localplayers[0].bg.get_rgba())
-                    self._ctx.arc(rect.x + center, rect.y + center, radius, 0,
-                                    2 * pi)
+                    self._ctx.set_source_rgba(
+                        *self.localplayers[0].bg.get_rgba())
+                    self._ctx.arc(rect.x + center,
+                                  rect.y + center, radius, 0, 2 * pi)
                     self._ctx.fill()
             self._ctx.restore()
 
@@ -482,7 +483,8 @@ class MazeGame(Gtk.DrawingArea):
             self._mark_point_dirty(oldposition)
             self._mark_point_dirty(newposition)
             if oldposition != newposition and player in self.localplayers:
-                if self.maze.map[player.previous[0]][player.previous[1]] == self.maze.PASSED:
+                if self.maze.map[player.previous[0]][player.previous[1]] == \
+                        self.maze.PASSED:
                     pass
                 else:
                     self.maze.map[player.previous[0]][player.previous[1]] = \
@@ -493,8 +495,11 @@ class MazeGame(Gtk.DrawingArea):
                 elif self.maze.map[newposition[0]][newposition[1]] == \
                         self.maze.HOLE:
                     player.fallThroughHole(self.tileSize)
-                    self._activity.broadcast_msg('fall_hole:%s,%s' %(str(newposition[0]), str(newposition[1])))
-                    self.maze.map[newposition[0]][newposition[1]] = self.maze.PASSED
+                    self._activity.broadcast_msg('fall_hole:%s,%s'
+                                                 % (str(newposition[0]),
+                                                 str(newposition[1])))
+                    self.maze.map[newposition[0]][newposition[1]] = \
+                        self.maze.PASSED
             self.queue_draw()
             if change_direction:
                 GLib.timeout_add(100, self.player_walk, player)
@@ -636,7 +641,8 @@ class MazeGame(Gtk.DrawingArea):
             # someone has a different maze than us
             self._activity.update_alert('Connected', 'Maze shared!')
             running_time, seed, width, height, hole = map(lambda x: int(x),
-                                                    message[5:].split(","))
+                                                          message[5:]
+                                                          .split(","))
             self.hole = True if hole else False
             if self.maze.seed == seed:
                 logging.debug('Same seed, don\'t reload Maze')

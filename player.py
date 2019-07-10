@@ -53,7 +53,7 @@ class Player:
 
     def draw(self, ctx, bounds, size, hole_color):
         if self.falling > 0.0:
-            self.falling -= int(size/5)
+            self.falling -= int(size / 5)
             if self.falling <= 20:
                 self.falling = 0.0
                 self.reset()
@@ -140,7 +140,9 @@ class Player:
         update = False
         if maze.map[self.position[0]][self.position[1]] == maze.GOAL:
             self.direction = (0, 0)
-        elif maze.map[self.position[0]][self.position[1]] == maze.HOLE or (maze.map[self.position[0]][self.position[1]] == maze.PASSED and self.falling > 0.0):
+        elif maze.map[self.position[0]][self.position[1]] == \
+                maze.HOLE or (maze.map[self.position[0]][self.position[1]] ==
+                              maze.PASSED and self.falling > 0.0):
             update = True
             self.direction = (0, 0)
         if self.direction == (0, 0):
