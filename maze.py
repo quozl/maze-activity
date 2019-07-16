@@ -46,12 +46,12 @@ class Maze:
     HOLE = 4
     PASSED = 5
 
-    def __init__(self, seed, width, height, add_hole=False):
+    def __init__(self, seed, width, height, risk=False):
         # use the seed given to us to make a pseudo-random number generator
         # we will use that to generate the maze, so that other players can
         # generate the exact same maze given the same seed.
         logging.debug("Generating maze: seed %d, width %d, \
-            height %d, add_hole %r", seed, width, height, add_hole)
+            height %d, risk %r", seed, width, height, risk)
         self.seed = seed
         self.generator = random.Random(seed)
         self.width, self.height = width, height
@@ -63,7 +63,7 @@ class Maze:
         startx = self.generator.randrange(1, width, 2)
         starty = self.generator.randrange(1, height, 2)
         self.dig(startx, starty)
-        if add_hole:
+        if risk:
             self._generate_holes()
 
         for row in self.map:

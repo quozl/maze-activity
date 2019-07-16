@@ -35,13 +35,13 @@ class MazeActivity(activity.Activity):
         self._busy_count = 0
         self._unbusy_idle_sid = None
         state = None
-        add_hole = False
+        risk = False
         if 'state' in self.metadata:
             state = json.loads(self.metadata['state'])
-            if 'add_hole' in state:
-                add_hole = state['add_hole']
+            if 'risk' in state:
+                risk = state['risk']
 
-        self.build_toolbar(add_hole)
+        self.build_toolbar(risk)
 
         self.pservice = PresenceService()
         self.owner = self.pservice.get_owner()
@@ -88,7 +88,7 @@ class MazeActivity(activity.Activity):
         self.get_window().set_cursor(cursor)
         Gdk.flush()
 
-    def build_toolbar(self, add_hole):
+    def build_toolbar(self, risk):
         """Build our Activity toolbar for the Sugar system."""
 
         toolbar_box = ToolbarBox()
@@ -112,8 +112,8 @@ class MazeActivity(activity.Activity):
 
         self.hole_button = ToggleToolButton('add-hole')
         self.hole_button.set_tooltip(_('Add hole'))
-        self.hole_button.set_active(add_hole)
-        self.hole_button.connect('toggled', self._add_hole)
+        self.hole_button.set_active(risk)
+        self.hole_button.connect('toggled', self._risk)
         toolbar_box.toolbar.insert(self.hole_button, -1)
 
         separator = Gtk.SeparatorToolItem()
@@ -142,9 +142,9 @@ class MazeActivity(activity.Activity):
 
         return toolbar_box
 
-    def _add_hole(self, button):
-        self.game.add_hole = button.get_active()
-        self.broadcast_msg('add_hole:%s' % str(self.game.add_hole))
+    def _risk(self, button):
+        self.game.risk = button.get_active()
+        self.broadcast_msg('risk:%s' % str(self.game.risk))
 
     def _easier_button_cb(self, button):
         self.game.easier()
@@ -241,7 +241,7 @@ class MazeActivity(activity.Activity):
                 'width': self.game.maze.width,
                 'height': self.game.maze.height,
                 'finish_time': self.game.finish_time,
-                'add_hole': self.game.add_hole}
+                'risk': self.game.risk}
 
         logging.debug('Saving data: %s', data)
         self.metadata['state'] = json.dumps(data)
