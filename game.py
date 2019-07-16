@@ -54,7 +54,7 @@ class MazeGame(Gtk.DrawingArea):
     SOLID_COLOR = (28.0 / 255.0, 28.0 / 255.0, 28.0 / 255.0)
     GOAL_COLOR = (0x00, 0xff, 0x00)
     HOLE_COLOR = (255, 0, 0)
-    PASSED_COLOR = (0, 255, 0)
+    PASSED_COLOR = (0, 127, 127)
 
     def __init__(self, activity, owner, state=None):
         super(MazeGame, self).__init__()
