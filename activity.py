@@ -34,19 +34,18 @@ class MazeActivity(activity.Activity):
         activity.Activity.__init__(self, handle)
         self._busy_count = 0
         self._unbusy_idle_sid = None
-        state = None
-        risk = False
-        if 'state' in self.metadata:
-            state = json.loads(self.metadata['state'])
-            if 'risk' in state:
-                risk = state['risk']
 
-        self.build_toolbar(risk)
+        if 'state' in self.metadata:
+            self._state = json.loads(self.metadata['state'])
+        else:
+            self._state = None
+
+        self.build_toolbar()
 
         self.pservice = PresenceService()
         self.owner = self.pservice.get_owner()
 
-        self.game = game.MazeGame(self, self.owner, state)
+        self.game = game.MazeGame(self, self.owner, self._state)
         self.set_canvas(self.game)
         self.game.show()
         self.connect("key_press_event", self.game.key_press_cb)
@@ -88,7 +87,7 @@ class MazeActivity(activity.Activity):
         self.get_window().set_cursor(cursor)
         Gdk.flush()
 
-    def build_toolbar(self, risk):
+    def build_toolbar(self):
         """Build our Activity toolbar for the Sugar system."""
 
         toolbar_box = ToolbarBox()
@@ -110,10 +109,11 @@ class MazeActivity(activity.Activity):
         harder_button.connect('clicked', self._harder_button_cb)
         toolbar_box.toolbar.insert(harder_button, -1)
 
-        self.hole_button = ToggleToolButton('add-hole')
-        self.hole_button.set_tooltip(_('Add hole'))
-        self.hole_button.set_active(risk)
-        self.hole_button.connect('toggled', self._risk)
+        self.hole_button = ToggleToolButton('make-risk')
+        self.hole_button.set_tooltip(_('Make risk'))
+        if self._state:
+            self.hole_button.set_active(self._state['risk'])
+        self.hole_button.connect('toggled', self._make_risk_button_cb)
         toolbar_box.toolbar.insert(self.hole_button, -1)
 
         separator = Gtk.SeparatorToolItem()
@@ -142,7 +142,7 @@ class MazeActivity(activity.Activity):
 
         return toolbar_box
 
-    def _risk(self, button):
+    def _make_risk_button_cb(self, button):
         self.game.risk = button.get_active()
         self.broadcast_msg('risk:%s' % str(self.game.risk))
 

@@ -64,14 +64,14 @@ class Maze:
         starty = self.generator.randrange(1, height, 2)
         self.dig(startx, starty)
         if risk:
-            self._generate_holes()
+            self._make_risk()
 
         for row in self.map:
             logging.debug(row)
 
-    def _generate_holes(self):
+    def _make_risk(self):
         if self.width <= 15:
-            max_holes = 0
+            max_holes = 1
         else:
             max_holes = int(self.width / 7) - 1
 
