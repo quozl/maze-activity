@@ -38,7 +38,8 @@ class MazeActivity(activity.Activity):
         add_hole = False
         if 'state' in self.metadata:
             state = json.loads(self.metadata['state'])
-            add_hole = state['add_hole']
+            if 'add_hole' in state:
+                add_hole = state['add_hole']
 
         self.build_toolbar(add_hole)
 
