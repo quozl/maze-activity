@@ -49,12 +49,13 @@ class MazeGame(Gtk.DrawingArea):
     """Maze game controller.
     This class handles all of the game logic, event loop, mulitplayer, etc."""
 
-    # Munsell color values http://wiki.laptop.org/go/Munsell
-    EMPTY_COLOR = (203.0 / 255.0, 203.0 / 255.0, 203.0 / 255.0)
-    SOLID_COLOR = (28.0 / 255.0, 28.0 / 255.0, 28.0 / 255.0)
-    GOAL_COLOR = (0x00, 0xff, 0x00)
-    HOLE_COLOR = (255, 0, 0)
-    PASSED_COLOR = (0, 127, 127)
+    # Munsell neutrals http://wiki.laptop.org/go/Munsell
+    EMPTY_COLOR = (203.0 / 256.0, 203.0 / 256.0, 203.0 / 256.0)
+    SOLID_COLOR = (28.0 / 256.0, 28.0 / 256.0, 28.0 / 256.0)
+
+    GOAL_COLOR = (0.0, 1.0, 0.0)
+    HOLE_COLOR = (1.0, 0.0, 0.0)
+    PASSED_COLOR = (0, 0.5, 0.5)
 
     def __init__(self, activity, owner, state=None):
         super(MazeGame, self).__init__()
