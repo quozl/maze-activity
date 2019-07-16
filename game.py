@@ -246,7 +246,7 @@ class MazeGame(Gtk.DrawingArea):
             line_width = self.tileSize / 32.
             cx = rect.x + self.tileSize / 2
             cy = rect.y + self.tileSize / 2
-            if(tile == self.maze.HOLE):
+            if tile == self.maze.HOLE:
                 self._ctx.save()
                 self._ctx.set_source_rgb(*self.EMPTY_COLOR)
                 self._ctx.rectangle(*rect.get_bounds())

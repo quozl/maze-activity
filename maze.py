@@ -80,7 +80,7 @@ class Maze:
             x = self.generator.randrange(1, self.width, 1)
             y = self.generator.randrange(1, self.height, 1)
 
-            if(self.validHole(x, y)):
+            if self.validHole(x, y):
                 self.map[x][y] = self.HOLE
                 holes += 1
 
