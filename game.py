@@ -90,7 +90,7 @@ class MazeGame(Gtk.DrawingArea):
             if width % 2 == 0:
                 width -= 1
             state = {'seed': int(time.time()),
-                     'height': height, 'width': width, 'risk': False}
+                     'height': height, 'width': width, 'risk': 0}
 
         if 'finish_time' in state and state['finish_time'] is not None:
             # the maze was alread played, reset it to start a new one
@@ -527,7 +527,7 @@ class MazeGame(Gtk.DrawingArea):
         self._activity.broadcast_msg(
             "maze:%d,%d,%d,%d,%d" %
             (self.game_running_time() * 1e6, self.maze.seed, self.maze.width,
-             self.maze.height, 1 if self.maze.risk else 0))
+             self.maze.height, self.maze.risk))
 
     def _handle_req_maze(self, player):
         # tell them which maze we are playing, so they can sync up
@@ -644,7 +644,6 @@ class MazeGame(Gtk.DrawingArea):
                 self.game_start_time = time.time() - running_time
                 # use the new seed
                 self._activity.busy()
-                risk = bool(risk)
                 self._activity.set_risk(risk)
                 self.maze = Maze(seed, width, height, risk)
                 self._activity.unbusy()

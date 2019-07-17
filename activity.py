@@ -148,7 +148,7 @@ class MazeActivity(activity.Activity):
         self._risk_button.connect('toggled', self._make_risk_button_cb)
 
     def _make_risk_button_cb(self, button):
-        self.game.set_risk(button.get_active())
+        self.game.set_risk(int(button.get_active()))
 
     def _easier_button_cb(self, button):
         self.game.easier()

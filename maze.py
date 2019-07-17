@@ -51,7 +51,7 @@ class Maze:
         # we will use that to generate the maze, so that other players can
         # generate the exact same maze given the same seed.
         logging.debug("Generating maze: seed %d, width %d, \
-            height %d, risk %r", seed, width, height, risk)
+            height %d, risk %d", seed, width, height, risk)
         self.seed = seed
         self.generator = random.Random(seed)
         self.width, self.height, self.risk = width, height, risk
