@@ -258,17 +258,15 @@ class MazeGame(Gtk.DrawingArea):
                 self._ctx.set_source_rgba(*self.SOLID_COLOR)
                 self._ctx.stroke()
             else:
-                background_color = self.EMPTY_COLOR
-                if tile == self.maze.EMPTY:
-                    background_color = self.EMPTY_COLOR
-                elif tile == self.maze.SOLID:
-                    background_color = self.SOLID_COLOR
-                elif tile == self.maze.GOAL:
-                    background_color = self.GOAL_COLOR
-                elif tile == self.maze.PASSED:
-                    background_color = self.PASSED_COLOR
+                bg = {
+                    self.maze.SOLID: self.SOLID_COLOR,
+                    self.maze.EMPTY: self.EMPTY_COLOR,
+                    self.maze.SEEN: self.EMPTY_COLOR,
+                    self.maze.GOAL: self.GOAL_COLOR,
+                    self.maze.PASSED: self.PASSED_COLOR
+                    }
                 self._ctx.save()
-                self._ctx.set_source_rgb(*background_color)
+                self._ctx.set_source_rgb(*bg[tile])
                 self._ctx.rectangle(*rect.get_bounds())
                 self._ctx.fill()
 
