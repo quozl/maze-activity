@@ -588,7 +588,7 @@ class MazeGame(Gtk.DrawingArea):
                 This way new players will join the existing game properly.
 
             move: x, y, dx, dy
-                A player's at x, y is now moving in direction dx, dy
+                A player at x, y is now moving in direction dx, dy
 
             step: x, y, dx, dy
                 A player move using the accelerator, move a single step
@@ -596,8 +596,7 @@ class MazeGame(Gtk.DrawingArea):
             show_trail: True/False
 
             fall_hole: x, y
-                To communicate whether a player has fallen in the
-                hole to all buddies as well as position of the hole
+                A player has fallen in the hole at x, y
 
             finish: elapsed
                 A player has finished the maze
