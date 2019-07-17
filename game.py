@@ -664,7 +664,6 @@ class MazeGame(Gtk.DrawingArea):
             player.fallThroughHole(self.tileSize)
             x, y = map(lambda x: int(x), message[10:].split(","))
             self.maze.map[x][y] = self.maze.PASSED
-            self.queue_draw()
         else:
             # it was something I don't recognize...
             logging.debug("Message from %s: %s", player.nick, message)
