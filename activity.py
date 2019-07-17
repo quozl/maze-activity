@@ -36,16 +36,16 @@ class MazeActivity(activity.Activity):
         self._unbusy_idle_sid = None
 
         if 'state' in self.metadata:
-            self._state = json.loads(self.metadata['state'])
+            self.state = json.loads(self.metadata['state'])
         else:
-            self._state = None
+            self.state = None
 
         self.build_toolbar()
 
         self.pservice = PresenceService()
         self.owner = self.pservice.get_owner()
 
-        self.game = game.MazeGame(self, self.owner, self._state)
+        self.game = game.MazeGame(self, self.owner, self.state)
         self.set_canvas(self.game)
         self.game.show()
         self.connect("key_press_event", self.game.key_press_cb)
@@ -111,8 +111,8 @@ class MazeActivity(activity.Activity):
 
         self.hole_button = ToggleToolButton('make-risk')
         self.hole_button.set_tooltip(_('Make risk'))
-        if self._state:
-            self.hole_button.set_active(self._state['risk'])
+        if self.state:
+            self.hole_button.set_active(self.state['risk'])
         self.hole_button.connect('toggled', self._make_risk_button_cb)
         toolbar_box.toolbar.insert(self.hole_button, -1)
 
