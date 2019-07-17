@@ -629,9 +629,8 @@ class MazeGame(Gtk.DrawingArea):
         elif message.startswith("maze:"):
             # someone has a different maze than us
             self._activity.update_alert('Connected', 'Maze shared!')
-            running_time, seed, width, height, risk = map(lambda x: int(x),
-                                                          message[5:]
-                                                          .split(","))
+            running_time, seed, width, height, risk = \
+                map(lambda x: int(x), message[5:].split(","))
             if self.maze.seed == seed:
                 logging.debug('Same seed, don\'t reload Maze')
                 return
