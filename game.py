@@ -241,16 +241,15 @@ class MazeGame(Gtk.DrawingArea):
                              self.tileSize, self.tileSize)
             tile = self.maze.map[x][y]
 
-            line_width = self.tileSize / 32.
-            cx = rect.x + self.tileSize / 2
-            cy = rect.y + self.tileSize / 2
             if tile == self.maze.HOLE:
+                line_width = self.tileSize / 32.
+                center = self.tileSize / 2
                 self._ctx.save()
                 self._ctx.set_source_rgb(*self.EMPTY_COLOR)
                 self._ctx.rectangle(*rect.get_bounds())
                 self._ctx.fill()
-                self._ctx.arc(cx, cy, (self.tileSize / 2 - line_width),
-                              0, 2 * math.pi)
+                self._ctx.arc(rect.x + center, rect.y + center,
+                              center - line_width, 0, 2 * math.pi)
                 self._ctx.save()
                 self._ctx.set_source_rgb(*self.HOLE_COLOR)
                 self._ctx.set_line_width(line_width)
@@ -276,8 +275,8 @@ class MazeGame(Gtk.DrawingArea):
                     center = self.tileSize / 2
                     self._ctx.set_source_rgba(
                         *self.localplayers[0].bg.get_rgba())
-                    self._ctx.arc(rect.x + center,
-                                  rect.y + center, radius, 0, 2 * pi)
+                    self._ctx.arc(rect.x + center, rect.y + center,
+                                  radius, 0, 2 * pi)
                     self._ctx.fill()
             self._ctx.restore()
 
