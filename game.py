@@ -33,7 +33,6 @@ import cairo
 
 import logging
 from gettext import gettext as _
-import math
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
@@ -249,7 +248,7 @@ class MazeGame(Gtk.DrawingArea):
                 self._ctx.rectangle(*rect.get_bounds())
                 self._ctx.fill()
                 self._ctx.arc(rect.x + center, rect.y + center,
-                              center - line_width, 0, 2 * math.pi)
+                              center - line_width, 0, 2 * pi)
                 self._ctx.save()
                 self._ctx.set_source_rgb(*self.HOLE_COLOR)
                 self._ctx.set_line_width(line_width)
