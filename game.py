@@ -662,8 +662,8 @@ class MazeGame(Gtk.DrawingArea):
 
         elif message.startswith("fall_hole:"):
             player.fallThroughHole(self.tileSize)
-            x_cor, y_cor = map(lambda x: int(x), message[10:].split(","))
-            self.maze.map[x_cor][y_cor] = self.maze.PASSED
+            x, y = map(lambda x: int(x), message[10:].split(","))
+            self.maze.map[x][y] = self.maze.PASSED
             self.queue_draw()
         else:
             # it was something I don't recognize...
