@@ -45,7 +45,7 @@ class MazeActivity(activity.Activity):
         self.pservice = PresenceService()
         self.owner = self.pservice.get_owner()
 
-        self.game = game.MazeGame(self, self.owner, self.state)
+        self.game = game.MazeGame(self)
         self.set_canvas(self.game)
         self.game.show()
         self.connect("key_press_event", self.game.key_press_cb)

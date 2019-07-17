@@ -57,7 +57,7 @@ class MazeGame(Gtk.DrawingArea):
     HOLE_COLOR = (1.0, 0.0, 0.0)
     PASSED_COLOR = (0, 0.5, 0.5)
 
-    def __init__(self, activity, owner, state):
+    def __init__(self, activity):
         super(MazeGame, self).__init__()
         # note what time it was when we first launched
         self.game_start_time = time.time()
@@ -69,7 +69,7 @@ class MazeGame(Gtk.DrawingArea):
         self.localplayers = []
 
         # start with just one player
-        player = Player(owner)
+        player = Player(activity.owner)
         self.localplayers.append(player)
         # plus some bonus players (all hidden to start with)
         self.localplayers.extend(player.bonusPlayers())
@@ -84,6 +84,7 @@ class MazeGame(Gtk.DrawingArea):
 
         # start with a small maze using a seed that will be different
         # each time you play
+        state = activity.state
         if state is None:
             height = 9
             width = int(height * self.aspectRatio)
