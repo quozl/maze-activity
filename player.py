@@ -52,10 +52,10 @@ class Player:
         self.falling = 0.0
 
     def draw(self, ctx, bounds, size, hole_color):
-        if self.falling > 0.0:
-            self.falling -= int(size / 5)
+        if self.falling > 0:
+            self.falling -= max(1, int(size / 5))
             if self.falling <= 20:
-                self.falling = 0.0
+                self.falling = 0
                 self.reset()
         line_width = size / 32.
         rect = Rectangle(bounds.x + self.position[0] * size,
@@ -142,7 +142,7 @@ class Player:
             self.direction = (0, 0)
         elif maze.map[self.position[0]][self.position[1]] == \
                 maze.HOLE or (maze.map[self.position[0]][self.position[1]] ==
-                              maze.PASSED and self.falling > 0.0):
+                              maze.PASSED and self.falling > 0):
             update = True
             self.direction = (0, 0)
         if self.direction == (0, 0):
