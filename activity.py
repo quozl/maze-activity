@@ -142,6 +142,9 @@ class MazeActivity(activity.Activity):
 
         return toolbar_box
 
+    def disable_risk(self):
+        self._risk_button.set_sensitive(False)
+
     def set_risk(self, risk):
         self._risk_button.disconnect_by_func(self._make_risk_button_cb)
         self._risk_button.set_active(risk)
