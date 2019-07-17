@@ -111,7 +111,7 @@ class MazeActivity(activity.Activity):
 
         self.hole_button = ToggleToolButton('make-risk')
         self.hole_button.set_tooltip(_('Make risk'))
-        if self.state:
+        if self.state and 'risk' in self.state:
             self.hole_button.set_active(self.state['risk'])
         self.hole_button.connect('toggled', self._make_risk_button_cb)
         toolbar_box.toolbar.insert(self.hole_button, -1)
