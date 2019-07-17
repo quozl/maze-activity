@@ -102,7 +102,7 @@ class MazeGame(Gtk.DrawingArea):
 
         logging.debug('Starting the game with: %s', state)
         self.maze = Maze(state['seed'], state['width'], state['height'],
-                         risk=self.risk)
+                         self.risk)
         self._ebook_mode_detector = sensors.EbookModeDetector()
         self._finish_window = None
         self.reset()
@@ -163,17 +163,17 @@ class MazeGame(Gtk.DrawingArea):
         if width < height:
             if self.maze.width < self.maze.height:
                 self.maze = Maze(self.maze.seed + 1, self.maze.width,
-                                 self.maze.height, risk=self.risk)
+                                 self.maze.height, self.risk)
             else:
                 self.maze = Maze(self.maze.seed + 1, self.maze.height,
-                                 self.maze.width, risk=self.risk)
+                                 self.maze.width, self.risk)
         else:
             if self.maze.width > self.maze.height:
                 self.maze = Maze(self.maze.seed + 1, self.maze.width,
-                                 self.maze.height, risk=self.risk)
+                                 self.maze.height, self.risk)
             else:
                 self.maze = Maze(self.maze.seed + 1, self.maze.height,
-                                 self.maze.width, risk=self.risk)
+                                 self.maze.width, self.risk)
         if len(self.remoteplayers) > 0:
             self.game_start_time -= 10
             self._send_maze()
@@ -659,7 +659,7 @@ class MazeGame(Gtk.DrawingArea):
                 self.game_start_time = time.time() - running_time
                 # use the new seed
                 self._activity.busy()
-                self.maze = Maze(seed, width, height, risk=self.risk)
+                self.maze = Maze(seed, width, height, self.risk)
                 self._activity.unbusy()
                 self.reset()
         elif message.startswith("finish:"):
@@ -710,8 +710,7 @@ class MazeGame(Gtk.DrawingArea):
 
     def _restart(self, newWidth, newHeight):
         self._activity.busy()
-        self.maze = Maze(self.maze.seed + 1, newWidth, newHeight,
-                         risk=self.risk)
+        self.maze = Maze(self.maze.seed + 1, newWidth, newHeight, self.risk)
         self.reset()
         # tell everyone which maze we are playing, so they can sync up
         if len(self.remoteplayers) > 0:
