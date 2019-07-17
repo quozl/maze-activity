@@ -251,9 +251,8 @@ class MazeGame(Gtk.DrawingArea):
                 self._ctx.fill()
                 self._ctx.arc(cx, cy, (self.tileSize / 2 - line_width),
                               0, 2 * math.pi)
-                background_color = self.HOLE_COLOR
                 self._ctx.save()
-                self._ctx.set_source_rgb(*background_color)
+                self._ctx.set_source_rgb(*self.HOLE_COLOR)
                 self._ctx.set_line_width(line_width)
                 self._ctx.fill_preserve()
                 self._ctx.set_source_rgba(*self.SOLID_COLOR)
