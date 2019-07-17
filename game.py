@@ -675,9 +675,8 @@ class MazeGame(Gtk.DrawingArea):
             self._activity.game.set_show_trail(show_trail)
 
         elif message.startswith("risk:"):
-            risk = message.endswith('True')
-            self._activity.hole_button.set_active(risk)
-            self.risk = risk
+            self.risk = message.endswith('True')
+            self._activity.hole_button.set_active(self.risk)
 
         elif message.startswith("fall_hole:"):
             player.fallThroughHole(self.tileSize)
