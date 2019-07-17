@@ -91,10 +91,7 @@ class MazeGame(Gtk.DrawingArea):
             if width % 2 == 0:
                 width -= 1
             state = {'seed': int(time.time()),
-                     'height': height, 'width': width}
-            self.risk = False  # Default
-        else:
-            self.risk = state['risk']
+                     'height': height, 'width': width, 'risk': False}
 
         if 'finish_time' in state and state['finish_time'] is not None:
             # the maze was alread played, reset it to start a new one
@@ -102,7 +99,7 @@ class MazeGame(Gtk.DrawingArea):
 
         logging.debug('Starting the game with: %s', state)
         self.maze = Maze(state['seed'], state['width'], state['height'],
-                         self.risk)
+                         state['risk'])
         self._ebook_mode_detector = sensors.EbookModeDetector()
         self._finish_window = None
         self.reset()
@@ -163,17 +160,17 @@ class MazeGame(Gtk.DrawingArea):
         if width < height:
             if self.maze.width < self.maze.height:
                 self.maze = Maze(self.maze.seed + 1, self.maze.width,
-                                 self.maze.height, self.risk)
+                                 self.maze.height, self.maze.risk)
             else:
                 self.maze = Maze(self.maze.seed + 1, self.maze.height,
-                                 self.maze.width, self.risk)
+                                 self.maze.width, self.maze.risk)
         else:
             if self.maze.width > self.maze.height:
                 self.maze = Maze(self.maze.seed + 1, self.maze.width,
-                                 self.maze.height, self.risk)
+                                 self.maze.height, self.maze.risk)
             else:
                 self.maze = Maze(self.maze.seed + 1, self.maze.height,
-                                 self.maze.width, self.risk)
+                                 self.maze.width, self.maze.risk)
         if len(self.remoteplayers) > 0:
             self.game_start_time -= 10
             self._send_maze()
@@ -532,11 +529,10 @@ class MazeGame(Gtk.DrawingArea):
              player.direction[0], player.direction[1]))
 
     def _send_maze(self):
-        risk = 1 if self.risk else 0
         self._activity.broadcast_msg(
             "maze:%d,%d,%d,%d,%d" %
             (self.game_running_time() * 1e6, self.maze.seed, self.maze.width,
-             self.maze.height, risk))
+             self.maze.height, 1 if self.maze.risk else 0))
 
     def _handle_req_maze(self, player):
         # tell them which maze we are playing, so they can sync up
@@ -604,9 +600,6 @@ class MazeGame(Gtk.DrawingArea):
 
             show_trail: True/False
 
-            risk: True/False
-                To enable holes in mazes
-
             fall_hole: x, y
                 To communicate whether a player has fallen in the
                 hole to all buddies as well as position of the hole
@@ -645,7 +638,6 @@ class MazeGame(Gtk.DrawingArea):
             running_time, seed, width, height, risk = map(lambda x: int(x),
                                                           message[5:]
                                                           .split(","))
-            self.risk = bool(risk)
             if self.maze.seed == seed:
                 logging.debug('Same seed, don\'t reload Maze')
                 return
@@ -659,7 +651,9 @@ class MazeGame(Gtk.DrawingArea):
                 self.game_start_time = time.time() - running_time
                 # use the new seed
                 self._activity.busy()
-                self.maze = Maze(seed, width, height, self.risk)
+                risk = bool(risk)
+                self._activity.set_risk(risk)
+                self.maze = Maze(seed, width, height, risk)
                 self._activity.unbusy()
                 self.reset()
         elif message.startswith("finish:"):
@@ -673,10 +667,6 @@ class MazeGame(Gtk.DrawingArea):
             show_trail = message.endswith('True')
             self._activity.show_trail_button.set_active(show_trail)
             self._activity.game.set_show_trail(show_trail)
-
-        elif message.startswith("risk:"):
-            self.risk = message.endswith('True')
-            self._activity.hole_button.set_active(self.risk)
 
         elif message.startswith("fall_hole:"):
             player.fallThroughHole(self.tileSize)
@@ -696,7 +686,7 @@ class MazeGame(Gtk.DrawingArea):
         newWidth = int(newHeight * self.aspectRatio)
         if newWidth % 2 == 0:
             newWidth -= 1
-        self._restart(newWidth, newHeight)
+        self._restart(newWidth, newHeight, self.maze.risk)
 
     def easier(self):
         """Make a new maze that is easier than the current one."""
@@ -705,11 +695,14 @@ class MazeGame(Gtk.DrawingArea):
         newWidth = int(newHeight * self.aspectRatio)
         if newWidth % 2 == 0:
             newWidth -= 1
-        self._restart(newWidth, newHeight)
+        self._restart(newWidth, newHeight, self.maze.risk)
 
-    def _restart(self, newWidth, newHeight):
+    def set_risk(self, risk):
+        self._restart(self.maze.width, self.maze.height, risk)
+
+    def _restart(self, newWidth, newHeight, risk):
         self._activity.busy()
-        self.maze = Maze(self.maze.seed + 1, newWidth, newHeight, self.risk)
+        self.maze = Maze(self.maze.seed + 1, newWidth, newHeight, risk)
         self.reset()
         # tell everyone which maze we are playing, so they can sync up
         if len(self.remoteplayers) > 0:

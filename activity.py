@@ -109,12 +109,12 @@ class MazeActivity(activity.Activity):
         harder_button.connect('clicked', self._harder_button_cb)
         toolbar_box.toolbar.insert(harder_button, -1)
 
-        self.hole_button = ToggleToolButton('make-risk')
-        self.hole_button.set_tooltip(_('Make risk'))
+        self._risk_button = ToggleToolButton('make-risk')
+        self._risk_button.set_tooltip(_('Make risk'))
         if self.state and 'risk' in self.state:
-            self.hole_button.set_active(self.state['risk'])
-        self.hole_button.connect('toggled', self._make_risk_button_cb)
-        toolbar_box.toolbar.insert(self.hole_button, -1)
+            self._risk_button.set_active(self.state['risk'])
+        self._risk_button.connect('toggled', self._make_risk_button_cb)
+        toolbar_box.toolbar.insert(self._risk_button, -1)
 
         separator = Gtk.SeparatorToolItem()
         toolbar_box.toolbar.insert(separator, -1)
@@ -142,9 +142,13 @@ class MazeActivity(activity.Activity):
 
         return toolbar_box
 
+    def set_risk(self, risk):
+        self._risk_button.disconnect_by_func(self._make_risk_button_cb)
+        self._risk_button.set_active(risk)
+        self._risk_button.connect('toggled', self._make_risk_button_cb)
+
     def _make_risk_button_cb(self, button):
-        self.game.risk = button.get_active()
-        self.broadcast_msg('risk:%s' % str(self.game.risk))
+        self.game.set_risk(button.get_active())
 
     def _easier_button_cb(self, button):
         self.game.easier()
@@ -241,7 +245,7 @@ class MazeActivity(activity.Activity):
                 'width': self.game.maze.width,
                 'height': self.game.maze.height,
                 'finish_time': self.game.finish_time,
-                'risk': self.game.risk}
+                'risk': self.game.maze.risk}
 
         logging.debug('Saving data: %s', data)
         self.metadata['state'] = json.dumps(data)

@@ -54,7 +54,7 @@ class Maze:
             height %d, risk %r", seed, width, height, risk)
         self.seed = seed
         self.generator = random.Random(seed)
-        self.width, self.height = width, height
+        self.width, self.height, self.risk = width, height, risk
         self.map = []
         self.bounds = Rectangle(0, 0, width, height)
         for x in range(0, width):
@@ -63,7 +63,7 @@ class Maze:
         startx = self.generator.randrange(1, width, 2)
         starty = self.generator.randrange(1, height, 2)
         self.dig(startx, starty)
-        if risk:
+        if self.risk:
             self._make_risk()
 
         for row in self.map:
