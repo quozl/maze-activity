@@ -263,7 +263,7 @@ class MazeGame(Gtk.DrawingArea):
                     self.maze.SEEN: self.EMPTY_COLOR,
                     self.maze.GOAL: self.GOAL_COLOR,
                     self.maze.PASSED: self.PASSED_COLOR
-                    }
+                }
                 self._ctx.save()
                 self._ctx.set_source_rgb(*bg[tile])
                 self._ctx.rectangle(*rect.get_bounds())
@@ -490,9 +490,9 @@ class MazeGame(Gtk.DrawingArea):
                 elif self.maze.map[newposition[0]][newposition[1]] == \
                         self.maze.HOLE:
                     player.fallThroughHole(self.tileSize)
-                    self._activity.broadcast_msg('fall_hole:%s,%s'
-                                                 % (str(newposition[0]),
-                                                 str(newposition[1])))
+                    self._activity.broadcast_msg(
+                        'fall_hole:%s,%s' % (str(newposition[0]),
+                                             str(newposition[1])))
                     self.maze.map[newposition[0]][newposition[1]] = \
                         self.maze.PASSED
             self.queue_draw()
