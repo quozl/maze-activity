@@ -49,7 +49,7 @@ class Player:
         self.hidden = False
         self.bonusplayers = None
         self.reset()
-        self.falling = 0.0
+        self.falling = 0
 
     def draw(self, ctx, bounds, size, hole_color):
         if self.falling > 0:
